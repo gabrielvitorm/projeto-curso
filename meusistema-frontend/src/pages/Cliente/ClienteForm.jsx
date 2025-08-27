@@ -68,7 +68,7 @@ const ClienteForm = () => {
   }
 
   return (
-    <Container className='mt-4'>
+    <Container className='mt-4 p-5'>
       <h2 className='mb-4 d-flex align-itens-center'>
         {
           id ? "Atualizar Cliente" : "Cadastrar Cliente"
