@@ -1,14 +1,15 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Container, Form, OverlayTrigger, Row, Tooltip } from 'react-bootstrap'
-import { FaQuestionCircle } from 'react-icons/fa'
-import { useParams } from 'react-router-dom'
+import { Button, Col, Container, Form, Modal, OverlayTrigger, Row, Tooltip } from 'react-bootstrap'
+import { FaCheckCircle, FaQuestionCircle } from 'react-icons/fa'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const ClienteForm = () => {
 
   const { id } = useParams()
   const apiUrl = import.meta.env.VITE_API_URL
-
+  const navigate = useNavigate()
+  const [modalAberto, setModalAberto] = useState(false)
   const [cliente, setCliente] = useState({
     nome: '',
     email: '',
@@ -61,6 +62,9 @@ const ClienteForm = () => {
     const request = id
     ? axios.put(`${apiUrl}/clientes/${id}`, clienteData)
     : axios.post(`${apiUrl}/clientes`, clienteData)
+
+    request.then(() => setModalAberto(true))
+    .catch(error => console.error("Houve um problema ao cadastrar/editar um fornecedor: ", error))
   }
 
   return (
@@ -227,6 +231,23 @@ const ClienteForm = () => {
             id ? "Atulizar" : "Cadastrar"
           }
         </Button>
+
+        <Modal show={modalAberto} onHide={() => { setModalAberto(false); navigate('/listar-clientes') }}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <FaCheckCircle className='text-success me-2'/>
+              Sucesso:
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {
+              id ? "Cliente atualizado com sucesso!" : "Cliente cadastrado com sucesso!"
+            }
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='success' onClick={() => navigate("/listar-clientes")}>Fechar</Button>
+          </Modal.Footer>
+        </Modal>
       </Form>
     </Container>
     
