@@ -1,0 +1,23 @@
+{
+  "fornecedores": [
+    {
+      "id": "1521",
+      "nome": "Empresa LTDA",
+      "email": "empresa@gmail.com",
+      "cnpj": "34359226000103",
+      "tipoFornecedor": "PREMIUM",
+      "endereco": {
+        "cep": "58037313",
+        "logradouro": "Rua Cantora Maria da Glória Gouveia de Vasconcelos",
+        "numero": "49",
+        "complemento": "apto 501",
+        "bairro": "Jardim Oceania",
+        "cidade": "João Pessoa",
+        "estado": "Paraíba",
+        "pais": "Brasil"
+      }
+    }
+  ],
+  "produtos": [],
+  "clientes": []
+}
