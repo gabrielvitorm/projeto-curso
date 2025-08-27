@@ -75,7 +75,7 @@ const FornecedorList = () => {
                 <td>{fornecedor.cnpj}</td>
                 <td>{fornecedor.tipoFornecedor}</td>
                 <td>
-                  <Button variant='warning' size='sm' className='me-2'>
+                  <Button as={Link} to={`/editar-fornecedor/${fornecedor.id}`} variant='warning' size='sm' className='me-2'>
                     <FaEdit className='me-1'/>Editar
                   </Button>
                   <Button variant='danger' size='sm' className='me-2' onClick={() => abrirModal(fornecedor)}>
