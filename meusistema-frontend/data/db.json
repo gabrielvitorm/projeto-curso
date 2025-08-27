@@ -36,5 +36,23 @@
     }
   ],
   "produtos": [],
-  "clientes": []
+  "clientes": [
+    {
+      "id": "2e96",
+      "nome": "Gabriel Chaves",
+      "email": "gabrielvitormchaves@gmail.com",
+      "telefone": "83996609067",
+      "cpf": "70630952426",
+      "endereco": {
+        "cep": "58037313",
+        "logradouro": "Rua Cantora Maria da Glória Gouveia de Vasconcelos",
+        "numero": "49",
+        "complemento": "apto 501",
+        "bairro": "Jardim Oceania",
+        "cidade": "João Pessoa",
+        "estado": "Paraíba",
+        "pais": "Brasil"
+      }
+    }
+  ]
 }
