@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Container, Form, OverlayTrigger, Row, Tooltip } from 'react-bootstrap'
-import { FaQuestionCircle } from 'react-icons/fa'
+import { Button, Col, Container, Form, OverlayTrigger, Row, Tooltip, Modal } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { FaQuestionCircle, FaCheckCircle } from 'react-icons/fa'
 import axios from 'axios'
 
 const FornecedorForm = () => {
+
+  const apiUrl = import.meta.env.VITE_API_URL
+
+  const navigate = useNavigate()
+
+  const [modalAberto, setModalAberto] = useState(false)
 
   const [fornecedor, setFornecedor] = useState({
     nome: '',
@@ -56,8 +63,11 @@ const FornecedorForm = () => {
       cnpj: fornecedor.cnpj.replace(/[^\d]/g, '')
     }
 
-    axios.post('http://localhost:3000/fornecedores', fornecedorData)
-    .then(response => console.log("Fornecedor cadastrado com sucesso!"))
+    axios.post(`${apiUrl}/fornecedores`, fornecedorData)
+    .then(response => {
+      console.log("Fornecedor cadastrado com sucesso: ", response)
+      setModalAberto(true)
+    })
     .catch(error => console.error("Erro ao cadastrar fornecedor: ", error))
   }
 
@@ -232,7 +242,25 @@ const FornecedorForm = () => {
           </Col>
         </Row>
 
-        <Button variant='primary' className='mt-2' type='submit'>Cadastrar</Button>
+        <Button variant='primary' className='mt-2' type='submit'>
+          Cadastrar
+        </Button>
+
+        {/* Modal de Sucesso */}
+        
+        <Modal show={modalAberto} onHide={() => { setModalAberto(false); navigate('/listar-fornecedores') }}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <FaCheckCircle className="text-success me-2"/>Sucesso:
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Fornecedor adicionado com sucesso!
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='success' onClick={() => navigate("/listar-fornecedores")}>Fechar</Button>
+          </Modal.Footer>
+        </Modal>
       
       </Form>
     </Container>

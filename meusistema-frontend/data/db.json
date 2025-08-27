@@ -16,6 +16,40 @@
         "estado": "Paraíba",
         "pais": "Brasil"
       }
+    },
+    {
+      "id": "3cc7",
+      "nome": "Fale Comunicação",
+      "email": "fale@gmail.com",
+      "cnpj": "22222222222222222",
+      "tipoFornecedor": "PREMIUM",
+      "endereco": {
+        "cep": "58037313",
+        "logradouro": "Rua Cantora Maria da Glória Gouveia de Vasconcelos",
+        "numero": "49",
+        "complemento": "apto 501",
+        "bairro": "Jardim Oceania",
+        "cidade": "João Pessoa",
+        "estado": "Paraíba",
+        "pais": "Brasil"
+      }
+    },
+    {
+      "id": "c0c3",
+      "nome": "Fale",
+      "email": "fale@gmail.com",
+      "cnpj": "333333333333",
+      "tipoFornecedor": "PREMIUM",
+      "endereco": {
+        "cep": "58037313",
+        "logradouro": "Rua Cantora Maria da Glória Gouveia de Vasconcelos",
+        "numero": "49",
+        "complemento": "apto 501",
+        "bairro": "Jardim Oceania",
+        "cidade": "João Pessoa",
+        "estado": "Paraíba",
+        "pais": "Brasil"
+      }
     }
   ],
   "produtos": [],
