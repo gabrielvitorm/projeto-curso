@@ -18,7 +18,24 @@
       }
     }
   ],
-  "produtos": [],
+  "produtos": [
+    {
+      "id": "4a79",
+      "nome": "Iphone 14",
+      "preco": 50,
+      "descricao": "Smartphone da Apple",
+      "quatidadeEstoque": 320,
+      "fornecedorId": "8ba1"
+    },
+    {
+      "id": "0127",
+      "nome": "Iphone 16",
+      "preco": 8250,
+      "descricao": "Smartphone mais atual da marca apple",
+      "quatidadeEstoque": 250,
+      "fornecedorId": "8ba1"
+    }
+  ],
   "clientes": [
     {
       "id": "0cd5",
