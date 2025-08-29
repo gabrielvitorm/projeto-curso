@@ -16,6 +16,23 @@
         "estado": "Paraíba",
         "pais": "Brasil"
       }
+    },
+    {
+      "id": "cf1d",
+      "nome": "Raiam Santos LTDA",
+      "email": "raimnarussia@gmail.com",
+      "cnpj": "473972202983748",
+      "tipoFornecedor": "PREMIUM",
+      "endereco": {
+        "cep": "58037313",
+        "logradouro": "Rua Cantora Maria da Glória Gouveia de Vasconcelos",
+        "numero": "49",
+        "complemento": "apto 501",
+        "bairro": "Jardim Oceania",
+        "cidade": "João Pessoa",
+        "estado": "Paraíba",
+        "pais": "Brasil"
+      }
     }
   ],
   "produtos": [

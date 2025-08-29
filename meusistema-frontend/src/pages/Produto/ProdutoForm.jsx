@@ -9,8 +9,9 @@ const ProdutoForm = () => {
   const apiUrl = import.meta.env.VITE_API_URL
   const { id } = useParams()
   const [modalAberto, setModalAberto] = useState(false)
+  const [fornecedorBackEnd, setFornecedorBackEnd] = useState([])
   const navigate = useNavigate()
-  const [ produto, setProduto] = useState({
+  const [produto, setProduto] = useState({
     nome: '',
     preco: '',
     descricao: '',
@@ -18,24 +19,30 @@ const ProdutoForm = () => {
     fornecedorId: ''
   })
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    const produtoData = {...produto}
+    const produtoData = { ...produto }
 
     const request = id
-    ? axios.put(`${apiUrl}/produtos/${produto.id}`, produtoData)
-    : axios.post(`${apiUrl}/produtos`, produtoData)
+      ? axios.put(`${apiUrl}/produtos/${id}`, produtoData)
+      : axios.post(`${apiUrl}/produtos`, produtoData)
 
     request.then(() => setModalAberto(true))
-    .catch(error => console.error("Houve um problema ao Cadastrar/editar um produto", error))
+      .catch(error => console.error("Houve um problema ao Cadastrar/editar um produto", error))
   }
 
-  useEffect(() =>{
-    if(id){
+  useEffect(() => {
+    axios.get(`${apiUrl}/fornecedores`)
+      .then(response => setFornecedorBackEnd(response.data))
+      .catch(error => console.error("Erro ao listar fornecedores", error));
+  }, [apiUrl]);
+
+  useEffect(() => {
+    if (id) {
       axios.get(`${apiUrl}/produtos/${id}`)
-      .then(response => setProduto(response.data))
-      .catch(error => console.error("Houve um erro ao carregar um produto: ", error))
+        .then(response => setProduto(response.data))
+        .catch(error => console.error("Houve um erro ao carregar um produto: ", error))
     }
   }, [id])
 
@@ -73,41 +80,46 @@ const ProdutoForm = () => {
                     className='mb-2'
                     type='text'
                     value={produto.nome}
-                    onChange={(e) => setProduto({...produto, nome: e.target.value})}
+                    onChange={(e) => setProduto({ ...produto, nome: e.target.value })}
                     required
                   />
                 </Form.Group>
                 <Row>
                   <Col md={2}>
                     <Form.Label className='mb-3'>Id do Cliente:</Form.Label>
-                    <Form.Control
-                      className='mb-2'
-                      type='text'
+                    <Form.Select
                       value={produto.fornecedorId}
-                      onChange={(e) => setProduto({...produto, fornecedorId: e.target.value})}
+                      onChange={(e) => setProduto({ ...produto, fornecedorId: e.target.value })}
                       required
-                    />
+                    >
+                      <option value="" >Selecione...</option>
+                      {fornecedorBackEnd.map((fornecedor) => (
+                        <option key={fornecedor.id} value={fornecedor.id}>
+                          {fornecedor.id} - {fornecedor.nome}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Col>
                   <Col md={5}>
-                  <Form.Group>
-                  <Form.Label className='mb-3'>Preço do Produto:</Form.Label>
-                  <Form.Control
-                    className='mb-2'
-                    type='text'
-                    value={produto.preco}
-                    onChange={(e) => setProduto({...produto, preco: parseFloat(e.target.value)})}
-                    required
-                  />
-                  </Form.Group>
+                    <Form.Group>
+                      <Form.Label className='mb-3'>Preço do Produto:</Form.Label>
+                      <Form.Control
+                        className='mb-2'
+                        type='text'
+                        value={produto.preco}
+                        onChange={(e) => setProduto({ ...produto, preco: parseFloat(e.target.value) })}
+                        required
+                      />
+                    </Form.Group>
                   </Col>
                   <Col md={5}>
                     <Form.Group>
                       <Form.Label className='mb-3'>Quantidade de Estoque</Form.Label>
-                      <Form.Control 
+                      <Form.Control
                         className='mb-2'
                         type='text'
                         value={produto.quantidadeEstoque}
-                        onChange={(e) => setProduto({...produto, quantidadeEstoque: parseFloat(e.target.value)})}
+                        onChange={(e) => setProduto({ ...produto, quantidadeEstoque: parseFloat(e.target.value) })}
                         required
                       />
                     </Form.Group>
@@ -119,7 +131,7 @@ const ProdutoForm = () => {
                     className='mb-2'
                     type='text-area'
                     value={produto.descricao}
-                    onChange={(e) => setProduto({...produto, descricao: e.target.value})}
+                    onChange={(e) => setProduto({ ...produto, descricao: e.target.value })}
                   />
                 </Form.Group>
                 <Row>
@@ -127,25 +139,25 @@ const ProdutoForm = () => {
                     <Button type='submit' className='w-100 mt-3 pt-3 pb-3'>
                       {
                         id
-                        ? "Atualizar Produto"
-                        : "Cadastrar Produto"
+                          ? "Atualizar Produto"
+                          : "Cadastrar Produto"
                       }
                     </Button>
                   </Col>
                 </Row>
 
-                <Modal show={modalAberto} onHide={() => {setModalAberto(false); navigate('/listar-produtos')}}>
+                <Modal show={modalAberto} onHide={() => { setModalAberto(false); navigate('/listar-produtos') }}>
                   <Modal.Header closeButton>
                     <Modal.Title>
-                      <FaCheckCircle className='text-success me-2'/>
+                      <FaCheckCircle className='text-success me-2' />
                       Sucesso!
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
                     {
                       id
-                      ? "Produto atualizado com sucesso!"
-                      : "Produto cadastrado com sucesso!"
+                        ? "Produto atualizado com sucesso!"
+                        : "Produto cadastrado com sucesso!"
                     }
                   </Modal.Body>
                   <Modal.Footer>
