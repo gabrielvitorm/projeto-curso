@@ -49,13 +49,13 @@ const ProdutoForm = () => {
   return (
     <Container
       fluid
-      className="min-vh-100 d-flex align-items-center justify-content-center bg-body-tertiary"
+      className="d-flex mt-5 justify-content-center bg-body-tertiary p-2"
     >
       <Row className="w-100 px-3">
         <Col
           xs={12}
         >
-          <Card className="rounded-4 shadow-sm mx-auto" style={{ width: "90%" }}>
+          <Card className="rounded-4 shadow-sm mx-auto p-3" style={{ width: "85%" }}>
             <Card.Body className="p-4 p-sm-5">
               <Card.Title className="mb-1 text-center">
                 <div className="d-flex align-items-center gap-2">

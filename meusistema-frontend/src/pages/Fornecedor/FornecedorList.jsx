@@ -14,12 +14,12 @@ const FornecedorList = () => {
 
   useEffect(() => {
     axios.get(`${apiUrl}/fornecedores`)
-    .then(response => setFornecedores(response.data))
-    .catch(error => console.error("Houve um problema para listar os fornecedores: ", error))
+      .then(response => setFornecedores(response.data))
+      .catch(error => console.error("Houve um problema para listar os fornecedores: ", error))
 
   }, [])
 
-  const fecharModal = () =>{
+  const fecharModal = () => {
     setModalAberto(false)
     setFornecedorSelecionado(null)
   }
@@ -31,30 +31,31 @@ const FornecedorList = () => {
 
   const excluirFornecedor = () => {
     axios.delete(`${apiUrl}/fornecedores/${fornecedorSelecionado.id}`)
-    .then(() => {
-      setFornecedores(prev => prev.filter(f => f.id !== fornecedorSelecionado.id))
-      fecharModal()
-    })
+      .then(() => {
+        setFornecedores(prev => prev.filter(f => f.id !== fornecedorSelecionado.id))
+        fecharModal()
+      })
   }
 
   return (
     <Container className='mt-5'>
-      <h2 className='mb-4 d-flex align-items-center'>
-        Lista de Fornecedores
-        <OverlayTrigger
-          placement='right'
-          overlay={<Tooltip>Visualize, edite ou exclua um fornecedor</Tooltip>}
-        >
-          <span className='ms-2' style={{ cursor: 'pointer' }}>
-            <FaQuestionCircle/>
-          </span>
 
-        </OverlayTrigger>
-      </h2>
 
-      <div className='mb-3'>
-        <Button as={Link} to='/cadastrar-fornecedor' variant='primary'>
-          <FaPlus className='me-2'/>
+      <div className="mb-5 d-flex justify-content-between align-items-center">
+        <h2 className="mb-0 d-flex align-items-center">
+          Lista de Fornecedores
+          <OverlayTrigger
+            placement="right"
+            overlay={<Tooltip>Visualize, edite ou exclua um fornecedor</Tooltip>}
+          >
+            <span className="ms-2" style={{ cursor: "pointer" }}>
+              <FaQuestionCircle />
+            </span>
+          </OverlayTrigger>
+        </h2>
+
+        <Button as={Link} to="/cadastrar-fornecedor" variant="primary">
+          <FaPlus className="me-2" />
           Adicionar Fornecedor
         </Button>
       </div>
@@ -76,10 +77,10 @@ const FornecedorList = () => {
                 <td>{fornecedor.tipoFornecedor}</td>
                 <td>
                   <Button as={Link} to={`/editar-fornecedor/${fornecedor.id}`} variant='warning' size='sm' className='me-2'>
-                    <FaEdit className='me-1'/>Editar
+                    <FaEdit className='me-1' />Editar
                   </Button>
                   <Button variant='danger' size='sm' className='me-2' onClick={() => abrirModal(fornecedor)}>
-                    <FaTrash className='me-1'/>Excluir
+                    <FaTrash className='me-1' />Excluir
                   </Button>
                 </td>
               </tr>
@@ -91,7 +92,7 @@ const FornecedorList = () => {
       <Modal show={modalAberto} onHide={fecharModal} centered>
         <Modal.Header>
           <Modal.Title>
-            <FaExclamationTriangle className='text-danger me-2'/>
+            <FaExclamationTriangle className='text-danger me-2' />
             Confirmar Exclusão
           </Modal.Title>
         </Modal.Header>

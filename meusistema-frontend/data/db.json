@@ -37,20 +37,20 @@
   ],
   "produtos": [
     {
-      "id": "4a79",
-      "nome": "Iphone 14",
-      "preco": 50,
-      "descricao": "Smartphone da Apple",
-      "quatidadeEstoque": 320,
-      "fornecedorId": "8ba1"
-    },
-    {
       "id": "0127",
       "nome": "Iphone 16",
       "preco": 8250,
       "descricao": "Smartphone mais atual da marca apple",
-      "quatidadeEstoque": 250,
+      "quantidadeEstoque": 250,
       "fornecedorId": "8ba1"
+    },
+    {
+      "id": "2c45",
+      "nome": "Ração DogShow",
+      "preco": 3500,
+      "descricao": "Ração sabor Cordeiro",
+      "quantidadeEstoque": 250,
+      "fornecedorId": "cf1d"
     }
   ],
   "clientes": [

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Container, Form, OverlayTrigger, Row, Tooltip, Modal } from 'react-bootstrap'
+import { Button, Col, Container, Form, OverlayTrigger, Row, Tooltip, Modal, Card } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import { FaQuestionCircle, FaCheckCircle } from 'react-icons/fa'
 import axios from 'axios'
@@ -27,7 +27,7 @@ const FornecedorForm = () => {
     }
   })
 
-  const handleEndereco = (campo, valor) =>{
+  const handleEndereco = (campo, valor) => {
     setFornecedor((prev) => ({
       ...prev,
       endereco: { ...prev.endereco, [campo]: valor }
@@ -41,19 +41,27 @@ const FornecedorForm = () => {
 
   useEffect(() => {
     const cep = fornecedor.endereco.cep.replace(/\D/g, '')
-    if(cep.length === 8){
+    if (cep.length === 8) {
       axios.get(`https://viacep.com.br/ws/${cep}/json`)
-      .then(response => {
-        handleEndereco ('logradouro', response.data.logradouro)
-        handleEndereco ('bairro', response.data.bairro)
-        handleEndereco ('cidade', response.data.localidade)
-        handleEndereco ('estado', response.data.estado)
-      })
-      .catch(error => console.error("Houve um erro ao buscar o endereço no Via Cep: ", error))
+        .then(response => {
+          handleEndereco('logradouro', response.data.logradouro)
+          handleEndereco('bairro', response.data.bairro)
+          handleEndereco('cidade', response.data.localidade)
+          handleEndereco('estado', response.data.estado)
+        })
+        .catch(error => console.error("Houve um erro ao buscar o endereço no Via Cep: ", error))
     }
   }, [fornecedor.endereco.cep])
 
-  const handleSubmit = (e) =>{
+  useEffect(() => {
+    if (id) {
+      axios.get(`${apiUrl}/fornecedores/${id}`)
+        .then(response => setFornecedor(response.data))
+        .catch(error => console.error("Houve um erro ao carregar o fornecedor: ", error))
+    }
+  }, [id])
+
+  const handleSubmit = (e) => {
     e.preventDefault()
 
     const fornecedorData = {
@@ -62,226 +70,235 @@ const FornecedorForm = () => {
     }
 
     const request = id
-    ? axios.put(`${apiUrl}/fornecedores/${id}`, fornecedorData)
-    : axios.post(`${apiUrl}/fornecedores`, fornecedorData)
+      ? axios.put(`${apiUrl}/fornecedores/${id}`, fornecedorData)
+      : axios.post(`${apiUrl}/fornecedores`, fornecedorData)
 
-    request.then(() => setModalAberto(true))
-    .catch(error => console.error("Houve um problema ao cadastrar/editar um fornecedor: ", error))
-
-    /*axios.post(`${apiUrl}/fornecedores`, fornecedorData)
-    .then(response => {
-      console.log("Fornecedor cadastrado com sucesso: ", response)
-      setModalAberto(true)
-    })
-    .catch(error => console.error("Erro ao cadastrar fornecedor: ", error))*/
+    request
+      .then(() => setModalAberto(true))
+      .catch(error => console.error("Houve um problema ao cadastrar/editar um fornecedor: ", error))
   }
 
-  useEffect(() =>{
-    if(id){
+  useEffect(() => {
+    if (id) {
       axios.get(`${apiUrl}/fornecedores/${id}`)
-      .then(response => setFornecedor(response.data))
-      .catch(error => console.error("Houve um erro ao carregar um fornecedor: ", error))
+        .then(response => setFornecedor(response.data))
+        .catch(error => console.error("Houve um erro ao carregar um fornecedor: ", error))
     }
   }, [id])
 
   return (
-    <Container className='mt-4'>
-      
-      <h2 className='mb-4 d-flex align-itens-center'>
-        {
-          id ? "Editar Fornecedor" : "Adicionar Fornecedor"
-        }
-        <OverlayTrigger
-          placement='right'
-          overlay={<Tooltip>Preencha os dados do fornecedor</Tooltip>}
+    <Container fluid
+      className="d-flex mt-5 justify-content-center bg-body-tertiary p-2"
+    >
+
+      <Row className="w-100 px-3">
+        <Col
+          xs={12}
         >
-          <span className='ms-2' style={{ cursor: 'pointer'}}>
-            <FaQuestionCircle/>
-          </span>
-        </OverlayTrigger>
-      </h2>
+          <Card className="rounded-4 shadow-sm mx-auto p-3 mb-4" style={{ width: "85%" }}>
+            <Card.Body className="p-4 p-sm-5">
+              <Card.Title className="mb-3 text-center">
+                <div className="d-flex align-items-center gap-2">
+                  <h2 className="mb-0">
+                    {id ? "Atualizar Produto" : "Cadastrar Produto"}
+                  </h2>
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip>Preencha os dados do cliente</Tooltip>}
+                  >
+                    <span className="ms-2" style={{ cursor: "pointer" }}>
+                      <FaQuestionCircle />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+              </Card.Title>
+              <Form onSubmit={handleSubmit}>
+                {/* Campo de Nome */}
+                <Form.Group className='mb-3'>
+                  <Form.Label>Nome:</Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={fornecedor.nome}
+                    onChange={(e) => setFornecedor({ ...fornecedor, nome: e.target.value })}
+                    required
+                  />
+                </Form.Group>
 
-      <Form onSubmit={handleSubmit}>
-        {/* Campo de Nome */}
-        <Form.Group className='mb-3'>
-          <Form.Label>Nome:</Form.Label>
-          <Form.Control
-            type='text'
-            value={fornecedor.nome}
-            onChange={(e) => setFornecedor({...fornecedor, nome: e.target.value})}
-            required
-          />
-        </Form.Group>
+                {/* Campo de Email */}
+                <Form.Group className='mb-3'>
+                  <Form.Label>Email:</Form.Label>
+                  <Form.Control
+                    type='email'
+                    value={fornecedor.email}
+                    onChange={(e) => setFornecedor({ ...fornecedor, email: e.target.value })}
+                    required
+                  />
+                </Form.Group>
 
-        {/* Campo de Email */}
-        <Form.Group className='mb-3'>
-          <Form.Label>Email:</Form.Label>
-          <Form.Control
-            type='email'
-            value={fornecedor.email}
-            onChange={(e) => setFornecedor({...fornecedor, email: e.target.value})}
-            required
-          />
-        </Form.Group>
+                {/* Campo de CNPJ */}
+                <Form.Group className='mb-3'>
+                  <Form.Label>CNPJ:</Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={fornecedor.cnpj}
+                    onChange={(e) => setFornecedor({ ...fornecedor, cnpj: e.target.value })}
+                    required
+                  />
+                </Form.Group>
 
-        {/* Campo de CNPJ */}
-        <Form.Group className='mb-3'>
-          <Form.Label>CNPJ:</Form.Label>
-          <Form.Control
-            type='text'
-            value={fornecedor.cnpj}
-            onChange={(e) => setFornecedor({...fornecedor, cnpj: e.target.value})}
-            required
-          />
-        </Form.Group>
+                {/* Select para Tipo Fornecedor */}
+                <Form.Group className='mb-3'>
+                  <Form.Label>Tipo Fornecedor</Form.Label>
+                  <Form.Select
+                    value={fornecedor.tipoFornecedor}
+                    onChange={(e) => setFornecedor({ ...fornecedor, tipoFornecedor: e.target.value })}
+                  >
+                    <option value="COMUM">COMUM</option>
+                    <option value="PREMIUM">PREMIUM</option>
+                  </Form.Select>
+                </Form.Group>
 
-        {/* Select para Tipo Fornecedor */}
-        <Form.Group className='mb-3'>
-          <Form.Label>Tipo Fornecedor</Form.Label>
-          <Form.Select
-            value={fornecedor.tipoFornecedor}
-            onChange={(e) => setFornecedor({...fornecedor, tipoFornecedor: e.target.value})}
-          >
-            <option value="COMUM">COMUM</option>
-            <option value="PREMIUM">PREMIUM</option>
-          </Form.Select>
-        </Form.Group>
+                {/* Campos de Endereço */}
+                <Row>
+                  <Col md={4}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>CEP:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        placeholder='Ex: 58000-00'
+                        value={fornecedor.endereco.cep}
+                        onChange={handleCepChange}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={8}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>Logradouro:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.logradouro}
+                        onChange={(e) => handleEndereco('logradouro', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-        {/* Campos de Endereço */}
-        <Row>
-          <Col md={4}>
-          <Form.Group className='mb-3'>
-            <Form.Label>CEP:</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Ex: 58000-00'
-              value={fornecedor.endereco.cep}
-              onChange={handleCepChange}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-          <Col md={8}>
-            <Form.Group className='mb-3'>
-            <Form.Label>Logradouro:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.logradouro}
-              onChange={(e) => handleEndereco('logradouro', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-        </Row>
+                <Row>
+                  <Col md={4}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>Numero:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.numero}
+                        onChange={(e) => handleEndereco('numero', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={8}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>Complemento:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.complemento}
+                        onChange={(e) => handleEndereco('complemento', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-        <Row>
-          <Col md={4}>
-          <Form.Group className='mb-3'>
-            <Form.Label>Numero:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.numero}
-              onChange={(e) => handleEndereco('numero', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-          <Col md={8}>
-            <Form.Group className='mb-3'>
-            <Form.Label>Complemento:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.complemento}
-              onChange={(e) => handleEndereco('complemento', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-        </Row>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>Bairro:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.bairro}
+                        onChange={(e) => handleEndereco('bairro', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>Cidade:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.cidade}
+                        onChange={(e) => handleEndereco('cidade', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-        <Row>
-          <Col md={6}>
-          <Form.Group className='mb-3'>
-            <Form.Label>Bairro:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.bairro}
-              onChange={(e) => handleEndereco('bairro', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className='mb-3'>
-            <Form.Label>Cidade:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.cidade}
-              onChange={(e) => handleEndereco('cidade', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-        </Row>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>Estado:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.estado}
+                        onChange={(e) => handleEndereco('estado', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className='mb-3'>
+                      <Form.Label>País:</Form.Label>
+                      <Form.Control
+                        type='text'
+                        value={fornecedor.endereco.pais}
+                        onChange={(e) => handleEndereco('pais', e.target.value)}
+                        autoComplete='off'
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-        <Row>
-          <Col md={6}>
-          <Form.Group className='mb-3'>
-            <Form.Label>Estado:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.estado}
-              onChange={(e) => handleEndereco('estado', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className='mb-3'>
-            <Form.Label>País:</Form.Label>
-            <Form.Control
-              type='text'
-              value={fornecedor.endereco.pais}
-              onChange={(e) => handleEndereco('pais', e.target.value)}
-              autoComplete='off'
-              required
-            />
-          </Form.Group>
-          </Col>
-        </Row>
+                <Button variant='primary' className='w-100 mt-3 pt-3 pb-3' type='submit'>
+                  {
+                    id ? "Atualizar" : "Cadastrar"
+                  }
+                </Button>
 
-        <Button variant='primary' className='mt-2' type='submit'>
-          {
-            id ? "Atualizar" : "Cadastrar"
-          }
-        </Button>
+                {/* Modal de Sucesso */}
 
-        {/* Modal de Sucesso */}
-        
-        <Modal show={modalAberto} onHide={() => { setModalAberto(false); navigate('/listar-fornecedores') }}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <FaCheckCircle className="text-success me-2"/>Sucesso:
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {
-              id ? "Fornecedor atualizado com sucesso!" : "Fornecedor cadastrado com sucesso!"
-            }
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='success' onClick={() => navigate("/listar-fornecedores")}>Fechar</Button>
-          </Modal.Footer>
-        </Modal>
-      
-      </Form>
+                <Modal show={modalAberto} onHide={() => { setModalAberto(false); navigate('/listar-fornecedores') }}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>
+                      <FaCheckCircle className="text-success me-2" />Sucesso:
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {
+                      id ? "Fornecedor atualizado com sucesso!" : "Fornecedor cadastrado com sucesso!"
+                    }
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant='success' onClick={() => navigate("/listar-fornecedores")}>Fechar</Button>
+                  </Modal.Footer>
+                </Modal>
+
+              </Form>
+            </Card.Body>
+          </Card>
+
+
+        </Col>
+      </Row>
     </Container>
   )
 }
